@@ -2,7 +2,7 @@
 <template>
     <div class="row">
         <div class="col-sm-9">
-            <div v-if="uploadFlag">
+            <div>
                 <div class="row">
                     <div class="col-sm-12">
                         <form enctype="multipart/form-data">
@@ -14,18 +14,6 @@
                     </div>
                 </div>
             </div>
-            <div v-else>
-                <div class="form-group">
-                    <label>Enter JSON</label>
-                    <textarea class="form-control" v-model="jsonString"  rows="4"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <button type="button" v-on:click="uploadFlag = true" class="btn btn-default">File Upload</button>
-
-            <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
-            <button type="button"  v-on:click="uploadFlag = false" class="btn btn-primary">Input Json</button>
         </div>
         <div class="row">
             <div class="col-sm-9">
@@ -111,6 +99,13 @@
 
         },
         methods: {
+
+            updateJson(){
+              this.json = JSON.parse(this.jsonString);
+
+              this.createChart();
+              this.createFullChart();
+            },
 
             formatJson(){
                 let _this = this;

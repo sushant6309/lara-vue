@@ -28785,18 +28785,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -28826,6 +28814,12 @@ var _ = __webpack_require__(8);
     mounted: function mounted() {},
 
     methods: {
+        updateJson: function updateJson() {
+            this.json = JSON.parse(this.jsonString);
+
+            this.createChart();
+            this.createFullChart();
+        },
         formatJson: function formatJson() {
             var _this2 = this;
 
@@ -28978,7 +28972,7 @@ var _ = __webpack_require__(8);
                             },
                             tooltip: {
                                 headerFormat: '<b>{series.name}</b><br>',
-                                pointFormat: '{point.x} , {point.y} m'
+                                pointFormat: '{point.x} m, {point.y} m'
                             }
                         }
                     },
@@ -29003,7 +28997,7 @@ var _ = __webpack_require__(8);
                         zoomType: 'xy'
                     },
                     title: {
-                        text: 'For Group Id = 1'
+                        text: 'For All Groups'
                     },
                     subtitle: {
                         text: 'Elucidata'
@@ -29052,7 +29046,7 @@ var _ = __webpack_require__(8);
                             },
                             tooltip: {
                                 headerFormat: '<b>{series.name}</b><br>',
-                                pointFormat: '{point.x} , {point.y} m'
+                                pointFormat: '{point.x} m, {point.y}'
                             }
                         }
                     },
@@ -42475,7 +42469,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-sm-9"
-  }, [(_vm.uploadFlag) ? _c('div', [_c('div', {
+  }, [_c('div', [_c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-sm-12"
@@ -42495,51 +42489,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "change": _vm.uploadFileEvent
     }
-  })])])])])]) : _c('div', [_c('div', {
-    staticClass: "form-group"
-  }, [_c('label', [_vm._v("Enter JSON")]), _vm._v(" "), _c('textarea', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.jsonString),
-      expression: "jsonString"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      "rows": "4"
-    },
-    domProps: {
-      "value": (_vm.jsonString)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.jsonString = $event.target.value
-      }
-    }
-  })])])]), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-3"
-  }, [_c('button', {
-    staticClass: "btn btn-default",
-    attrs: {
-      "type": "button"
-    },
-    on: {
-      "click": function($event) {
-        _vm.uploadFlag = true
-      }
-    }
-  }, [_vm._v("File Upload")]), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-primary",
-    attrs: {
-      "type": "button"
-    },
-    on: {
-      "click": function($event) {
-        _vm.uploadFlag = false
-      }
-    }
-  }, [_vm._v("Input Json")])]), _vm._v(" "), _c('div', {
+  })])])])])])]), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-sm-9"
