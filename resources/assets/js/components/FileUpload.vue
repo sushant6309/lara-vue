@@ -266,7 +266,7 @@
                                 },
                                 tooltip: {
                                     headerFormat: '<b>{series.name}</b><br>',
-                                    pointFormat: '{point.x} , {point.y} m'
+                                    pointFormat: '{point.x} m, {point.y} m'
                                 }
                             }
                         },
@@ -290,7 +290,7 @@
                             zoomType: 'xy'
                         },
                         title: {
-                            text: 'For Group Id = 1'
+                            text: 'For All Groups'
                         },
                         subtitle: {
                             text: 'Elucidata'
@@ -339,7 +339,7 @@
                                 },
                                 tooltip: {
                                     headerFormat: '<b>{series.name}</b><br>',
-                                    pointFormat: '{point.x} , {point.y} m'
+                                    pointFormat: '{point.x} m, {point.y}'
                                 }
                             }
                         },
