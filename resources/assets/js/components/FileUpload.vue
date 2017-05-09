@@ -24,11 +24,33 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="uploadFlag">
             <div class="col-sm-9">
                 <div class="Chart">
                     <h2>Scatter Chart For All Groups</h2>
-                    <div id="containerFull" style="min-width: 315px; height: 400px"></div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    {{selectGroupBtn}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li v-for="group in json.groups">
+                                        <a href="#" v-on:click.prevent="buildChart(group.groupId)">{{group.groupId}}</a>
+                                    </li>
+                                    <li>
+                                        <a v-on:click.prevent="buildChart('all')">All</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="containerFull" style="min-width: 315px; height: 400px"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,27 +91,24 @@
 </style>
 
 <script>
-    import FileUpload from 'vue-upload-component';
     import Vue from 'vue';
     let Highcharts = require('highcharts');
     let _ = require('lodash');
 
     export default {
-        components: {
-            FileUpload,
-        },
 
         props: ['token'],
 
         data: function () {
             return {
-                uploadFlag : true,
+                uploadFlag : false,
                 jsonString : '',
                 json : {},
                 showChart_1: false,
                 showChart_2: false,
                 chartError_1: '',
                 chartError_2: '',
+                selectGroupBtn:'All Groups',
 
 
             }
@@ -100,6 +119,16 @@
         },
         methods: {
 
+            buildChart(id){
+                if(id === 'all'){
+                    this.selectGroupBtn = 'All Groups';
+                    this.createFullChart();
+                    return true;
+                }
+              this.selectGroupBtn = `Group Id: ${id}` ;
+              this.createChart('containerFull',id);
+            },
+
             updateJson(){
               this.json = JSON.parse(this.jsonString);
 
@@ -107,11 +136,18 @@
               this.createFullChart();
             },
 
-            formatJson(){
+            formatJson(groupId){
+
+//                [
+//                    {
+//                        name: '',
+//                        data:[[x,y]],
+//                    }
+//                ]
                 let _this = this;
                 let indexPromise = new Promise((resolve, reject)=>{
                     let index = _.findIndex(this.json.groups,(g)=>{
-                        return g.groupId === 1;
+                        return g.groupId === groupId;
                     });
                     if(index > -1){
                         _this.showChart_1 = true;
@@ -128,6 +164,17 @@
                             data : []
                         };
                         _.forEach(val.eic.rt, function (r, key) {
+                            if(r === _this.json.groups[groupIndex]['peaks'][index]['rt']){
+                                temp.data.push(
+                                    {
+                                        x: r,
+                                        y: _this.json.groups[0]['peaks'][index].eic.intensity[key],
+                                        marker: {
+                                            symbol: 'url(https://www.highcharts.com/samples/graphics/sun.png)'
+                                        }
+
+                                    })
+                            }
                             temp.data.push([r,_this.json.groups[0]['peaks'][index].eic.intensity[key]]);
                         });
                         series.push(temp);
@@ -192,27 +239,28 @@
                     }).then(response =>{
                         this.jsonString = response.bodyText;
                         this.json = response.body;
-                        this.createChart();
+                        this.uploadFlag = true;
+                        this.createChart('container', 1);
                         this.createFullChart();
                     });
             },
 
-            createChart(){
+            createChart(containerId, groupId){
                 let p = new Promise((resolve, reject)=>{
-                    let data = this.formatJson();
+                    let data = this.formatJson(groupId);
                     resolve(data);
                 });
                 p.then((success)=>{
                     if(success.length === 0 ){
                         return false;
                     }
-                    Highcharts.chart('container', {
+                    Highcharts.chart(containerId, {
                         chart: {
                             type: 'scatter',
                             zoomType: 'xy'
                         },
                         title: {
-                            text: 'For Group Id = 1'
+                            text: `For Group Id = ${groupId}`
                         },
                         subtitle: {
                             text: 'Elucidata'
